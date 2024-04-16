@@ -1,4 +1,4 @@
-export tag=v1.0.0
+export tag=v1.0.2
 
 build:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/ .
