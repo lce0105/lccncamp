@@ -111,6 +111,10 @@ func (lrw *LoggingResponseWriter) WriterHeader(statusCode int) {
 	lrw.ResponseWriter.WriteHeader(statusCode)
 }
 
+func (lrw *LoggingResponseWriter) WriterString(msg string) (int, error) {
+	return io.WriteString(lrw.ResponseWriter, msg)
+}
+
 func wrapHandlerWithLogging(wrappedHandler http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		ip, err := GetIP(request)
@@ -120,7 +124,10 @@ func wrapHandlerWithLogging(wrappedHandler http.Handler) http.Handler {
 
 		loggingResponseWriter := NewLoggingResponseWriter(writer)
 		wrappedHandler.ServeHTTP(loggingResponseWriter, request)
-		loggingResponseWriter.WriterHeader(http.StatusInternalServerError)
+		_, err = loggingResponseWriter.WriterString("Http Server Normal Response\n")
+		if err != nil {
+			loggingResponseWriter.WriterHeader(http.StatusInternalServerError)
+		}
 
 		glog.Infof("response code: %d", loggingResponseWriter.statusCode)
 	})
