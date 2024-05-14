@@ -5,7 +5,10 @@ import (
 	"errors"
 	"flag"
 	"github.com/golang/glog"
+	"github.com/lce0105/lccncamp/metrics"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"io"
+	"math/rand"
 	"net"
 	"net/http"
 	"os"
@@ -19,9 +22,12 @@ func main() {
 	flag.Parse()
 	flag.Set("logtostderr", "true")
 	glog.Info("Starting Http Server...")
+	metrics.Register()
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/healthz", healthzHandler)
-	mux.Handle("/", wrapHandlerWithLogging(http.HandlerFunc(rootHandler)))
+	mux.Handle("/hello", wrapHandlerWithLogging(http.HandlerFunc(rootHandler)))
+	mux.Handle("/metrics", promhttp.Handler())
 
 	server := http.Server{
 		Addr:    ":8080",
@@ -61,6 +67,10 @@ func healthzHandler(writer http.ResponseWriter, request *http.Request) {
 
 func rootHandler(writer http.ResponseWriter, request *http.Request) {
 	glog.Info("enter root handler...")
+	timer := metrics.NewTimer()
+	defer timer.ObserveTotal()
+	delay := rand.Intn(1990) + 10
+	time.Sleep(time.Millisecond * time.Duration(delay))
 	// 获取request header添加到response
 	for headerKey, headerValue := range request.Header {
 		if len(headerKey) > 0 {
