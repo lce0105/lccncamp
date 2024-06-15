@@ -9,7 +9,12 @@
 
 3.灰度发布,登录用户为jason,转到reviews服务的v2版本
 ![image](https://github.com/lce0105/lccncamp/assets/163086376/6a68ea3f-4aaa-4ec0-932f-c85bb3951f2c)
-登录用户为非jason或者不登录,转到reviews服务的v1版本
-![image](https://github.com/lce0105/lccncamp/assets/163086376/d4bec649-e4d1-46ae-8a55-cdc84c6c6328)
+登录用户为非jason或者不登录,转到reviews服务的v3版本
+![image](https://github.com/lce0105/lccncamp/assets/163086376/3e63f0bd-018a-46f1-8ffe-12aee9e30f63)
+
+4.接入jaeger-tracing
+![322ee15fdfd0e6c46e7ee038d2d628c](https://github.com/lce0105/lccncamp/assets/163086376/497c34da-8e69-4078-a27f-5554ed314cc1)
+
+
 
 
