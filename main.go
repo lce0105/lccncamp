@@ -49,10 +49,10 @@ func main() {
 	<-signals
 	// 收到停机信号, 执行停机操作
 	glog.Info("stopping http server...")
-	context, cancelFunc := context.WithTimeout(context.Background(), 60*time.Second) // 60秒退出
+	ctx, cancelFunc := context.WithTimeout(context.Background(), 60*time.Second) // 60秒退出
 	defer cancelFunc()
 
-	if err := server.Shutdown(context); err != nil {
+	if err := server.Shutdown(ctx); err != nil {
 		glog.Fatal("stop http server error", err)
 	}
 	glog.Info("stop http server success")
@@ -73,7 +73,7 @@ func rootHandler(writer http.ResponseWriter, request *http.Request) {
 	time.Sleep(time.Millisecond * time.Duration(delay))
 	// 获取request header添加到response
 	for headerKey, headerValue := range request.Header {
-		if len(headerKey) > 0 {
+		if len(headerKey) > 0 && headerKey != "Content-Length" {
 			for _, val := range headerValue {
 				writer.Header().Add(headerKey, val)
 			}
